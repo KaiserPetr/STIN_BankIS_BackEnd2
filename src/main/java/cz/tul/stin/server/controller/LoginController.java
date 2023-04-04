@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin("http://bankis.azurewebsites.net")
+@CrossOrigin("https://bankis.azurewebsites.net/")
 public class LoginController {
     @Autowired
     private EmailSenderService service;

@@ -14,7 +14,7 @@ import static cz.tul.stin.server.model.User.getUserData;
 
 
 @RestController
-@CrossOrigin("http://bankis.azurewebsites.net")
+@CrossOrigin("https://bankis.azurewebsites.net/")
 public class AccountController {
 
     @PostMapping("/getUserData")
