@@ -12,17 +12,16 @@ public class LoginController {
     private EmailSenderService service;
 
     @PostMapping("/login")
-    public String login(@RequestBody String clientId) {
-        User client;
-        try {
-            client = User.getUserData(Integer.parseInt(clientId.replace("=","")));
-        } catch (Exception e) {
+    public String login(@RequestBody String clientId) throws Exception{
+        User client = User.getUserData(Integer.parseInt(clientId.replace("=","")));
+        if (client != null) {
+            String code = Bank.generateRandomCode();
+            String msg = String.format("Váš kód pro přilášení je: %s", code);
+            service.sendSimpleEmail(client.getEmail(), Const.EMAIL_SUBJECT, msg);
+            return code;
+        } else {
             return "-1";
         }
-        String code = Bank.generateRandomCode();
-        String msg = String.format("Váš kód pro přilášení je: %s", code);
-        service.sendSimpleEmail(client.getEmail(), Const.EMAIL_SUBJECT, msg);
-        return code;
     }
 
 }

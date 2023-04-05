@@ -53,7 +53,7 @@ public class User {
                 return new User(id, firstName, surName, email);
             }
         }
-        throw new RuntimeException("Uzivatel nenalezen");
+        return null;
     }
 
     public static List<Account> getUserAccounts(int userId) throws Exception {
