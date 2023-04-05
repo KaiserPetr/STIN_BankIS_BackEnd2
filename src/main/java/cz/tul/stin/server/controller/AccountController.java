@@ -14,7 +14,7 @@ import static cz.tul.stin.server.model.User.getUserData;
 
 
 @RestController
-@CrossOrigin("https://bankis.azurewebsites.net/")
+@CrossOrigin("https://stellular-maamoul-21d188.netlify.app/")
 public class AccountController {
 
     @PostMapping("/getUserData")
