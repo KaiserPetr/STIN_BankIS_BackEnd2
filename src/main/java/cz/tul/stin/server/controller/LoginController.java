@@ -13,7 +13,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestBody String clientId) throws Exception{
-        return clientId.replace("=","");
+        return clientId;
 
     }
 
