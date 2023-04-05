@@ -11,7 +11,7 @@ public class LoginController {
     @Autowired
     private EmailSenderService service;
 
-    @PostMapping("/")
+    @PostMapping("/login")
     public String login(@RequestBody String clientId) throws Exception {
         clientId = clientId.replace("=","");
         User client = User.getUserData(Integer.parseInt(clientId));
