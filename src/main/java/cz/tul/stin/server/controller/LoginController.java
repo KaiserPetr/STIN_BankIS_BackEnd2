@@ -13,12 +13,12 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestBody String clientId) throws Exception {
-        clientId = clientId.replace("=","");
-        User client = User.getUserData(Integer.parseInt(clientId));
-        String code = Bank.generateRandomCode();
-        String msg = String.format("Váš kód pro přilášení je: %s",code);
-        service.sendSimpleEmail(client.getEmail(), Const.EMAIL_SUBJECT,msg);
-        return code;
+        //clientId = clientId.replace("=","");
+        //User client = User.getUserData(Integer.parseInt(clientId));
+        //String code = Bank.generateRandomCode();
+        //String msg = String.format("Váš kód pro přilášení je: %s",code);
+        //service.sendSimpleEmail(client.getEmail(), Const.EMAIL_SUBJECT,msg);
+        return clientId;
     }
 
 }
