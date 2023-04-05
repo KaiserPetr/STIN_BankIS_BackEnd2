@@ -13,6 +13,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestBody String clientId) throws Exception{
+        return clientId.replace("=","");
+        /*
         User client = User.getUserData(Integer.parseInt(clientId.replace("=","")));
         if (client != null) {
             String code = Bank.generateRandomCode();
@@ -22,6 +24,7 @@ public class LoginController {
         } else {
             return "-1";
         }
+        */
     }
 
 }
