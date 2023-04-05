@@ -44,9 +44,9 @@ public class UserTest {
         Assertions.assertEquals("Petr", user.getFirstname());
         Assertions.assertEquals("Kaiser", user.getSurname());
         Assertions.assertEquals("petr.kaiser@tul.cz", user.getEmail());
-
         // Test invalid user ID
-        Assertions.assertThrows(RuntimeException.class, () -> User.getUserData(999));
+        User user2 = User.getUserData(999);
+        Assertions.assertNull(user2);
     }
 
     @Test
