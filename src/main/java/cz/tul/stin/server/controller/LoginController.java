@@ -12,7 +12,7 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody String clientId){
+    public String login(@RequestBody String clientId) throws Exception {
 
         User client = User.getUserData(Integer.parseInt(clientId.replace("=", "")));
 
