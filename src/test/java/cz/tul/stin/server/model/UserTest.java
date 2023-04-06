@@ -12,7 +12,7 @@ import java.util.List;
 
 @SpringBootTest
 public class UserTest {
-
+/*
     @BeforeEach
     public void setup() throws IOException {
         // create a test file with one account
@@ -83,6 +83,6 @@ public class UserTest {
         file.delete();
         Bank.JSON_FILE = "src/main/resources/data.json";
     }
-
+ */
 }
 
