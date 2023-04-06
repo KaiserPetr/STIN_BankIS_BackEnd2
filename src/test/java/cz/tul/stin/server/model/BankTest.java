@@ -81,7 +81,7 @@ public class BankTest {
         // delete the test file
         File file = new File("src/main/resources/dataTestBank.json");
         file.delete();
-        Bank.JSON_FILE = "src/main/resources/data.json";
+        Bank.JSON_FILE = "https://api.jsonbin.io/v3/b/642eda34ebd26539d0a5c16d";
     }
 
 }
