@@ -18,7 +18,7 @@ public class Account {
         this.wrbtr = wrbtr;
         this.waers = waers;
     }
-    
+
     public static Account getAccountFromJson (int accNum) throws Exception {
         Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
         JSONObject jo = (JSONObject) obj;
