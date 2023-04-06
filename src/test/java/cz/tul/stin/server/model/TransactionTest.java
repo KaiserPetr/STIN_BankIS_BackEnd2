@@ -275,7 +275,7 @@ class TransactionTest {
         // delete the test file
         File file = new File("src/main/resources/dataTestTransaction.json");
         file.delete();
-        Bank.JSON_FILE = "https://api.jsonbin.io/v3/b/642eda34ebd26539d0a5c16d";
+        Bank.JSON_FILE = "src/main/resources/data.json";
     }
 
 }
