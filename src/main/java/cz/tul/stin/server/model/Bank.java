@@ -7,15 +7,12 @@ import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
-import org.springframework.beans.factory.annotation.Value;
 
-import javax.annotation.Resource;
 
 public class Bank {
 
     public static final String [] CURRENCIES = {"AUD","CAD","CZK","EUR","GBP","HUF","PLN","CHF","USD"};
     public static String JSON_FILE = "src/main/resources/data.json";
-
 
     public static void downloadExchangeRates() throws Exception {
         URL url = new URL(Const.CNB_URL);

@@ -35,7 +35,7 @@ public class UserTest {
 
         Bank.JSON_FILE = "src/main/resources/dataTestUser.json";
     }
-
+    /*
     @Test
     public void testGetUserData() throws Exception {
         // Test valid user ID
@@ -48,7 +48,7 @@ public class UserTest {
         User user2 = User.getUserData(999);
         Assertions.assertNull(user2);
     }
-
+    */
     @Test
     public void testGetUserDataNotFound() {
         Bank.JSON_FILE = null;

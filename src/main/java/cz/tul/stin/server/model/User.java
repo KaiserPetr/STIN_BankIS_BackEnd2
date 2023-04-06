@@ -4,8 +4,10 @@ import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.util.ResourceUtils;
 
 import java.io.FileReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,9 @@ public class User {
 
     public static User getUserData(int id) {
         try {
-            Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
+            Path file = ResourceUtils.getFile("data.json").toPath();
+
+            Object obj = new JSONParser().parse(new FileReader(file.toFile()));
             JSONObject jo = (JSONObject) obj;
 
             JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
