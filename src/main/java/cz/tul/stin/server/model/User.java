@@ -4,11 +4,8 @@ import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -17,10 +14,6 @@ import java.util.List;
 public class User {
     private int id;
     private String firstname, surname, email;
-    @Value("classpath:src/main/resources/data.json")
-    static
-    Resource resourceFile;
-
 
     public User(int id, String firstname, String surname, String email) {
         this.id = id;
@@ -47,7 +40,9 @@ public class User {
 
     public static User getUserData(int id) {
         try {
-            Object obj = new JSONParser().parse(new FileReader((File) resourceFile));
+            File f = ResourceUtils.getFile(Bank.JSON_FILE);
+
+            Object obj = new JSONParser().parse(f.toString());
             JSONObject jo = (JSONObject) obj;
 
             JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
