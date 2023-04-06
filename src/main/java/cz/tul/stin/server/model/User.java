@@ -4,9 +4,7 @@ import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +38,7 @@ public class User {
 
     public static User getUserData(int id) {
         try {
-            File f = ResourceUtils.getFile(Bank.JSON_FILE);
-
-            Object obj = new JSONParser().parse(f.toString());
+            Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
             JSONObject jo = (JSONObject) obj;
 
             JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
@@ -66,9 +62,8 @@ public class User {
 
     public static List<Account> getUserAccounts(int userId) throws Exception {
         List<Account> accounts = new ArrayList<>();
-        File f = ResourceUtils.getFile(Bank.JSON_FILE);
+        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
 
-        Object obj = new JSONParser().parse(f.toString());
         JSONObject jo = (JSONObject) obj;
         JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
         for (Object o : ja) {
