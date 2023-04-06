@@ -11,7 +11,7 @@ import org.json.simple.parser.*;
 public class Bank {
 
     public static final String [] CURRENCIES = {"AUD","CAD","CZK","EUR","GBP","HUF","PLN","CHF","USD"};
-    public static String JSON_FILE = "src/main/resources/data.json";
+    public static String JSON_FILE = "https://api.jsonbin.io/v3/b/642eda34ebd26539d0a5c16d";
 
     public static void downloadExchangeRates() throws Exception {
         URL url = new URL(Const.CNB_URL);
