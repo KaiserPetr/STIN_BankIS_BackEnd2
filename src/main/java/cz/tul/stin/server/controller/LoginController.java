@@ -19,7 +19,6 @@ public class LoginController {
         if (client != null) {
             String code = Bank.generateRandomCode();
             String msg = String.format("Váš kód pro přilášení je: %s", code);
-
             return code;
         } else {
             return "-1";
