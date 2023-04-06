@@ -9,6 +9,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,8 @@ public class User {
         return surname;
     }
 
-    public static User getUserData(int id) {
-        try {
+    public static User getUserData(int id) throws Exception {
+
             ObjectMapper mapper = new ObjectMapper();
             File f = mapper.readValue(new File(Bank.JSON_FILE), File.class);
 
@@ -61,9 +62,7 @@ public class User {
                     return new User(id, firstName, surName, email);
                 }
             }
-        } catch (Exception e){
-            return null;
-        }
+
         return null;
     }
 
