@@ -36,22 +36,26 @@ public class User {
         return surname;
     }
 
-    public static User getUserData(int id) throws Exception {
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
+    public static User getUserData(int id) {
+        try {
+            Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
+            JSONObject jo = (JSONObject) obj;
 
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
+            JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
 
-        for (Object o : ja) {
-            JSONObject joi = (JSONObject) o;
-            int jId = Integer.parseInt(joi.get(Const.JKEY_ID).toString());
-            if(jId == id){
+            for (Object o : ja) {
+                JSONObject joi = (JSONObject) o;
+                int jId = Integer.parseInt(joi.get(Const.JKEY_ID).toString());
+                if (jId == id) {
 
-                String firstName = joi.get(Const.JKEY_FIRSTNAME).toString();
-                String surName = joi.get(Const.JKEY_SURNAME).toString();
-                String email = joi.get(Const.JKEY_EMAIL).toString();
-                return new User(id, firstName, surName, email);
+                    String firstName = joi.get(Const.JKEY_FIRSTNAME).toString();
+                    String surName = joi.get(Const.JKEY_SURNAME).toString();
+                    String email = joi.get(Const.JKEY_EMAIL).toString();
+                    return new User(id, firstName, surName, email);
+                }
             }
+        } catch (Exception e){
+            return null;
         }
         return null;
     }
