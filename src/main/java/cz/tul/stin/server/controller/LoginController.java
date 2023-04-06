@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin("https://stellular-maamoul-21d188.netlify.app/")
 public class LoginController {
+
     @Autowired
     private EmailSenderService service;
 
@@ -25,7 +26,6 @@ public class LoginController {
             return "-1";
         }
     }
-
 }
 
 
