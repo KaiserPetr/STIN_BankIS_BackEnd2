@@ -1,11 +1,13 @@
 package cz.tul.stin.server.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -40,9 +42,10 @@ public class User {
 
     public static User getUserData(int id) {
         try {
-            Path file = ResourceUtils.getFile("data.json").toPath();
+            ObjectMapper mapper = new ObjectMapper();
+            File f = mapper.readValue(new File("../src/main/resources/data.json"), File.class);
 
-            Object obj = new JSONParser().parse(new FileReader(file.toFile()));
+            Object obj = new JSONParser().parse(new FileReader(f));
             JSONObject jo = (JSONObject) obj;
 
             JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
