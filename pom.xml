@@ -59,6 +59,11 @@
 			<version>3.2.4</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-dependency-plugin</artifactId>
+			<version>3.5.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -86,6 +91,33 @@
 							<formats>
 								<format>XML</format>
 							</formats>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>unpack-jar-file</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>groupID</groupId>
+									<artifactId>artifactId</artifactId>
+									<version>version</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+									<includes>**/*.json</includes>
+								</artifactItem>
+							</artifactItems>
 						</configuration>
 					</execution>
 				</executions>
