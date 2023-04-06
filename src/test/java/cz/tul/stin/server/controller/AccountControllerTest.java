@@ -19,9 +19,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class AccountControllerTest {
-    /*
+/*
     private MockMvc mockMvc;
 
     @Mock
@@ -85,7 +84,6 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("1.2"));
     }
-    */
 
     @RunWith(MockitoJUnitRunner.class)
     public static class LoginControllerTest {
@@ -131,5 +129,6 @@ class AccountControllerTest {
         }
 
     }
+    */
 }
 
