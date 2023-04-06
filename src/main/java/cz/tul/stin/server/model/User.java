@@ -43,7 +43,7 @@ public class User {
     public static User getUserData(int id) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            File f = mapper.readValue(new File("../src/main/resources/data.json"), File.class);
+            File f = mapper.readValue(new File(Bank.JSON_FILE), File.class);
 
             Object obj = new JSONParser().parse(new FileReader(f));
             JSONObject jo = (JSONObject) obj;
