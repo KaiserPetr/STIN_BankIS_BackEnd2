@@ -50,6 +50,13 @@ public class UserTest {
     }
 
     @Test
+    public void testGetUserDataNotFound() {
+        Bank.JSON_FILE = null;
+        User u = User.getUserData(1234);
+        Assertions.assertThrows(Exception.class, null);
+    }
+
+    @Test
     public void testGetUserAccounts() throws Exception {
         // Test user with no accounts
         List<Account> accounts = User.getUserAccounts(3);
