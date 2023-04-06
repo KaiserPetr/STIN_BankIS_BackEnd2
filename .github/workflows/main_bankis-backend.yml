@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'BankIS-backend'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55BE9EE0BB054C9FB448D7A1C84F3616 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_69A7E5C8477744959576127E185D45CB }}
           package: '*.jar'
