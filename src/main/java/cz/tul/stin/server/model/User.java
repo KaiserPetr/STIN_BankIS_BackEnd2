@@ -43,25 +43,25 @@ public class User {
 
     public static User getUserData(int id) throws Exception {
 
-            ObjectMapper mapper = new ObjectMapper();
-            File f = mapper.readValue(new File(Bank.JSON_FILE), File.class);
+        ObjectMapper mapper = new ObjectMapper();
+        File f = mapper.readValue(new File(Bank.JSON_FILE), File.class);
 
-            Object obj = new JSONParser().parse(new FileReader(f));
-            JSONObject jo = (JSONObject) obj;
+        Object obj = new JSONParser().parse(new FileReader(f));
+        JSONObject jo = (JSONObject) obj;
 
-            JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
+        JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
 
-            for (Object o : ja) {
-                JSONObject joi = (JSONObject) o;
-                int jId = Integer.parseInt(joi.get(Const.JKEY_ID).toString());
-                if (jId == id) {
+        for (Object o : ja) {
+            JSONObject joi = (JSONObject) o;
+            int jId = Integer.parseInt(joi.get(Const.JKEY_ID).toString());
+            if (jId == id) {
 
-                    String firstName = joi.get(Const.JKEY_FIRSTNAME).toString();
-                    String surName = joi.get(Const.JKEY_SURNAME).toString();
-                    String email = joi.get(Const.JKEY_EMAIL).toString();
-                    return new User(id, firstName, surName, email);
-                }
+                String firstName = joi.get(Const.JKEY_FIRSTNAME).toString();
+                String surName = joi.get(Const.JKEY_SURNAME).toString();
+                String email = joi.get(Const.JKEY_EMAIL).toString();
+                return new User(id, firstName, surName, email);
             }
+        }
 
         return null;
     }
