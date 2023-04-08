@@ -5,12 +5,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Json {
+
     public static JSONObject getJsonObject(String urlString) throws Exception {
         URL url = new URL(urlString);
         JSONParser parser = new JSONParser();
@@ -34,7 +35,7 @@ public class Json {
         openHttpConnection(url, json);
     }
 
-    public static void openHttpConnection(String url, String json) throws Exception {
+    public static void openHttpConnection(String url, String json) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -46,8 +47,5 @@ public class Json {
         wr.writeBytes(json);
         wr.flush();
         wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("Response Code: " + responseCode);
     }
 }

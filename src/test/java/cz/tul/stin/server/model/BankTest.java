@@ -34,7 +34,7 @@ public class BankTest {
 
     @Test
     public void testGetExchanegRateDate() throws Exception {
-        Assertions.assertEquals(Bank.getExchanegRateDate(), "06.04.2023");
+        Assertions.assertEquals("06.04.2023", Bank.getExchanegRateDate());
     }
 
     @Test

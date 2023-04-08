@@ -2,61 +2,95 @@ package cz.tul.stin.server.model;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-public class JsonTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    private final String GET_URL = "https://jsonplaceholder.typicode.com/posts";
-    private final String GET_URL_OBJ = "https://api.npoint.io/a85768b55f75d24e90b7";
-    private final String POST_URL = "https://jsonplaceholder.typicode.com/posts";
+class JsonTest {
 
     @Test
-    void getJsonObjectTest() throws Exception {
-        JSONObject jsonObject = Json.getJsonObject(GET_URL_OBJ);
-        Assertions.assertNotNull(jsonObject);
-        Assertions.assertTrue(jsonObject.containsKey("what"));
+    void testGetJsonObject() throws Exception {
+        // Given
+        String url = "https://jsonplaceholder.typicode.com/posts/1";
+
+        // When
+        JSONObject jsonObject = Json.getJsonObject(url);
+
+        // Then
+        assertEquals(1L, jsonObject.get("id"));
+        assertEquals("sunt aut facere repellat provident occaecati excepturi optio reprehenderit", jsonObject.get("title"));
     }
 
     @Test
-    void getJsonArrayTest() throws Exception {
-        JSONArray jsonArray = Json.getJsonArray(GET_URL);
-        Assertions.assertNotNull(jsonArray);
-        Assertions.assertEquals(100, jsonArray.size());
-        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-        Assertions.assertTrue(jsonObject.containsKey("userId"));
-        Assertions.assertTrue(jsonObject.containsKey("id"));
-        Assertions.assertTrue(jsonObject.containsKey("title"));
-        Assertions.assertTrue(jsonObject.containsKey("body"));
+    void testGetJsonArray() throws Exception {
+        // Given
+        String url = "https://jsonplaceholder.typicode.com/posts";
+
+        // When
+        JSONArray jsonArray = Json.getJsonArray(url);
+
+        // Then
+        assertEquals(100, jsonArray.size());
     }
 
     @Test
-    void postJsonObjectTest() throws Exception {
+    void testPostJsonObject() throws Exception {
+        // Given
+        String url = "https://jsonplaceholder.typicode.com/posts";
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("title", "foo");
+        jsonObject.put("body", "bar");
         jsonObject.put("userId", 1);
-        jsonObject.put("id", 1);
-        jsonObject.put("title", "Test Title");
-        jsonObject.put("body", "Test Body");
 
-        Json.postJsonObject(POST_URL, jsonObject);
+        // When
+        Json.postJsonObject(url, jsonObject);
+
+        // Then
+        URL urlObj = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+        connection.setRequestMethod("GET");
+        assertEquals(201, connection.getResponseCode());
     }
 
     @Test
-    void postJsonArrayTest() throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", 1);
-        jsonObject.put("id", 1);
-        jsonObject.put("title", "Test Title");
-        jsonObject.put("body", "Test Body");
-
-        List<JSONObject> jsonObjects = new ArrayList<>();
-        jsonObjects.add(jsonObject);
+    void testPostJsonArray() throws Exception {
+        // Given
+        String url = "https://jsonplaceholder.typicode.com/posts";
         JSONArray jsonArray = new JSONArray();
-        jsonArray.addAll(jsonObjects);
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject1.put("title", "foo");
+        jsonObject1.put("body", "bar");
+        jsonObject1.put("userId", 1);
+        jsonArray.add(jsonObject1);
+        JSONObject jsonObject2 = new JSONObject();
+        jsonObject2.put("title", "baz");
+        jsonObject2.put("body", "qux");
+        jsonObject2.put("userId", 2);
+        jsonArray.add(jsonObject2);
 
-        Json.postJsonArray(POST_URL, jsonArray);
+        // When
+        Json.postJsonArray(url, jsonArray);
+
+        // Then
+        URL urlObj = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+        connection.setRequestMethod("GET");
+        assertEquals(201, connection.getResponseCode());
+    }
+
+    @Test
+    void testOpenHttpConnection() {
+        // Given
+        String url = "http://www.example.com";
+        String json = "{\"foo\":\"bar\"}";
+
+        // When
+        assertThrows(IOException.class, () -> Json.openHttpConnection(url, json));
     }
 }
+
