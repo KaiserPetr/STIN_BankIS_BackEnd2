@@ -10,15 +10,9 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     @PostMapping("/login")
-    public String login(@RequestBody String clientId) throws Exception {
-        User client = User.getUserData(Integer.parseInt(clientId.replace("=", "")));
-
-        if (client != null) {
-            String code = Bank.generateRandomCode();
-            return code;
-        } else {
-            return "-1";
-        }
+    public String login(@RequestBody String clientId){
+        return Bank.generateRandomCode();
+        
     }
 }
 
