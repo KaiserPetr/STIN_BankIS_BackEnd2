@@ -54,6 +54,6 @@ public class Json {
         wr.flush();
         wr.close();
 
-        int responseCode = con.getResponseCode();
+        con.getResponseCode();
     }
 }
