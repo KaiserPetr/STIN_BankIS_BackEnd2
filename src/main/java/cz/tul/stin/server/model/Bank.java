@@ -1,18 +1,25 @@
 package cz.tul.stin.server.model;
 
-import java.util.*;
-import java.io.*;
-import java.net.URL;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
 
+import java.net.URL;
+import java.util.Random;
+import java.util.Scanner;
+
+import static cz.tul.stin.server.model.Json.getJsonArray;
 
 public class Bank {
 
     public static final String [] CURRENCIES = {"AUD","CAD","CZK","EUR","GBP","HUF","PLN","CHF","USD"};
-    public static String JSON_FILE = "src/main/resources/data.json";
+
+    public static String JSON_TRANSACTIONS = "https://api.npoint.io/00dd6d5cbcab26314a7b";
+    public static String JSON_CNB = "https://api.npoint.io/6997254c8bfd5df5736a";
+    public static String JSON_ACCOUNTS = "https://api.npoint.io/4039555b9d988523ca33";
+    public static String JSON_USERS = "https://api.npoint.io/9623327c5439cec96d2b";
+    public static String JSON_CNB_DATE = "https://api.npoint.io/f12d14488063dc28d90e";
+
 
     public static void downloadExchangeRates() throws Exception {
         URL url = new URL(Const.CNB_URL);
@@ -42,25 +49,17 @@ public class Bank {
     }
 
     public static String getExchanegRateDate() throws Exception{
-        Object obj = new JSONParser().parse(new FileReader(JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
+        JSONObject jo = Json.getJsonObject(Bank.JSON_CNB_DATE);
         return jo.get(Const.JKEY_CNB_DATE).toString();
     }
     public static void updateExchanegRateDate(String newDate) throws Exception{
-        Object obj = new JSONParser().parse(new FileReader(JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
+        JSONObject jo = Json.getJsonObject(Bank.JSON_CNB_DATE);
         jo.replace(Const.JKEY_CNB_DATE,newDate);
-
-        try (FileWriter file = new FileWriter(JSON_FILE)) {
-            file.write(jo.toString());
-        }
+        Json.postJsonObject(Bank.JSON_CNB_DATE,jo);
     }
 
     public static void updateExchangeRate(Float wrbtr, String waers) throws Exception{
-        Object obj = new JSONParser().parse(new FileReader(JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_CNB);
+        JSONArray ja = getJsonArray(Bank.JSON_CNB);
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
             String jWaers = joi.get(Const.JKEY_WAERS).toString();
@@ -69,20 +68,12 @@ public class Bank {
                 joi.replace(Const.JKEY_WRBTR,newWrbtr);
                 break;
             }
-
         }
-
-        try (FileWriter file = new FileWriter(JSON_FILE)) {
-            file.write(jo.toString());
-        }
+        Json.postJsonArray(Bank.JSON_CNB,ja);
     }
 
     public static float getExchangeRate(String waers) throws Exception {
-        Object obj = new JSONParser().parse(new FileReader(JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_CNB);
-
+        JSONArray ja = getJsonArray(Bank.JSON_CNB);
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
             String jWaers = joi.get(Const.JKEY_WAERS).toString();
@@ -90,7 +81,6 @@ public class Bank {
                 return Float.parseFloat(joi.get(Const.JKEY_WRBTR).toString().replace(",","."));
             }
         }
-
         throw new RuntimeException("Mena nenalezena.");
     }
 

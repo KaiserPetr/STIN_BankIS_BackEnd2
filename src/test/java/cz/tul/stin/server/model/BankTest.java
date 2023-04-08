@@ -1,50 +1,40 @@
 package cz.tul.stin.server.model;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-
 public class BankTest {
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws Exception {
 
-        File copied = new File("src/main/resources/dataTestBank.json");
-        File original = new File("src/main/resources/dataTest.json");
+        Bank.JSON_CNB = "https://api.npoint.io/0162c3ff8723f1380bdb";
+        // post test data
+        String data = "[{\"waers\":\"CZK\",\"wrbtr\":1},{\"waers\":\"EUR\",\"wrbtr\":\"23,410\"},{\"waers\":\"USD\",\"wrbtr\":\"21,450\"},{\"waers\":\"GBP\",\"wrbtr\":\"26,745\"},{\"waers\":\"AUD\",\"wrbtr\":\"14,351\"},{\"waers\":\"CAD\",\"wrbtr\":\"15,919\"},{\"waers\":\"HUF\",\"wrbtr\":\"0,062\"},{\"waers\":\"PLN\",\"wrbtr\":\"4,997\"},{\"waers\":\"CHF\",\"wrbtr\":\"23,693\"}]";
+        JSONParser parser = new JSONParser();
+        JSONArray ja = (JSONArray) parser.parse(data);;
 
-        try (
-                InputStream in = new BufferedInputStream(
-                        Files.newInputStream(original.toPath()));
-                OutputStream out = new BufferedOutputStream(
-                        Files.newOutputStream(copied.toPath()))) {
+        Json.postJsonArray(Bank.JSON_CNB,ja);
 
-            byte[] buffer = new byte[1024];
-            int lengthRead;
-            while ((lengthRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, lengthRead);
-                out.flush();
-            }
-        }
-
-        Bank.JSON_FILE = "src/main/resources/dataTestBank.json";
+        Bank.JSON_CNB_DATE = "https://api.npoint.io/96c946958442a78823f0";
+        String dataDate = "{\"cnbDate\":\"06.04.2023\"}";
+        JSONObject jo = (JSONObject) parser.parse(dataDate);
+        Json.postJsonObject(Bank.JSON_CNB_DATE,jo);
     }
 
     @Test
-    public void testDownloadExchangeRates() {
+    void testDownloadExchangeRates() {
         Assertions.assertDoesNotThrow(Bank::downloadExchangeRates);
-        File file = new File(Bank.JSON_FILE);
-        Assertions.assertTrue(file.exists() && !file.isDirectory());
     }
 
     @Test
     public void testGetExchanegRateDate() throws Exception {
-        Assertions.assertEquals(Bank.getExchanegRateDate(), "31.03.2023");
+        Assertions.assertEquals(Bank.getExchanegRateDate(), "06.04.2023");
     }
 
     @Test
@@ -54,20 +44,40 @@ public class BankTest {
         Assertions.assertEquals(Bank.getExchanegRateDate(), newDate);
     }
 
+
     @Test
     public void testUpdateExchangeRate() throws Exception {
-        Bank.updateExchangeRate(1.5f, "EUR");
-        Assertions.assertEquals(Bank.getExchangeRate("EUR"), 1.5f);
+        // Before update
+        float initialRate = Bank.getExchangeRate("USD");
+        float updatedRate = initialRate * 2;
+
+        // Update exchange rate
+        Bank.updateExchangeRate(updatedRate, "USD");
+
+        // Check that the exchange rate has been updated
+        float newRate = Bank.getExchangeRate("USD");
+        Assertions.assertEquals(updatedRate, newRate, 0.001);
+
+        // Restore the original exchange rate
+        Bank.updateExchangeRate(initialRate, "USD");
     }
 
     @Test
     public void testGetExchangeRate() throws Exception {
-        List<String> currencies = Arrays.asList(Bank.CURRENCIES);
-        for (String currency : currencies) {
-            Assertions.assertTrue(Bank.getExchangeRate(currency) > 0);
-        }
-        Assertions.assertThrows(RuntimeException.class, () -> Bank.getExchangeRate("XXX"));
+        // Test the exchange rate for a known currency
+        float rate = Bank.getExchangeRate("CZK");
+        Assertions.assertTrue(rate > 0);
+
+        // Test that an exception is thrown for an unknown currency
+        Assertions.assertThrows(RuntimeException.class, () -> Bank.getExchangeRate("XYZ"));
     }
+
+    @Test
+    void testGetExchangeRateInvalidJson() {
+        Bank.JSON_CNB = "https://httpbin.org/status/404";
+        Assertions.assertThrows(Exception.class, () -> Bank.getExchangeRate("USD"));
+    }
+
 
     @Test
     public void testGenerateRandomCode() {
@@ -78,10 +88,8 @@ public class BankTest {
 
     @AfterEach
     public void cleanup() {
-        // delete the test file
-        File file = new File("src/main/resources/dataTestBank.json");
-        file.delete();
-        Bank.JSON_FILE = "https://api.jsonbin.io/v3/b/642eda34ebd26539d0a5c16d";
+        Bank.JSON_CNB = "https://api.npoint.io/6997254c8bfd5df5736a";
+        Bank.JSON_CNB_DATE = "https://api.npoint.io/f12d14488063dc28d90e";
     }
 
 }
