@@ -55,6 +55,5 @@ public class Json {
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.err.println("Response Code: " + responseCode);
     }
 }
