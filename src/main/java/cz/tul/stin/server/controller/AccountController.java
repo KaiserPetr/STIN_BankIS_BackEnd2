@@ -17,9 +17,10 @@ import static cz.tul.stin.server.model.User.getUserData;
 @CrossOrigin("https://stellular-maamoul-21d188.netlify.app/")
 public class AccountController {
 
+    @CrossOrigin
     @RequestMapping(value = "/getUserData",
             produces = "application/json",
-            method=RequestMethod.PUT)
+            method=RequestMethod.POST)
     public User getUser(@RequestBody String clientId) throws Exception {
         return getUserData(Integer.parseInt(clientId.replace("=","")));
     }
