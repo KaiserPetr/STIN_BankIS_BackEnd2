@@ -3,6 +3,7 @@ package cz.tul.stin.server.model;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,9 @@ public class User {
     }
 
    public static User getUserData(int id) throws Exception {
-       JSONArray ja = getJsonArray(Bank.JSON_USERS);
+       String data = "[{\"id\":1234,\"email\":\"petr.kaiser1@seznam.cz\",\"surname\":\"Kaiser\",\"firstname\":\"Petr\"},{\"id\":4321,\"email\":\"petr.kaiser1@seznam.cz\",\"surname\":\"Novák\",\"firstname\":\"Jan\"}]";
+       JSONParser parser = new JSONParser();
+       JSONArray ja = (JSONArray) parser.parse(data);;
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
