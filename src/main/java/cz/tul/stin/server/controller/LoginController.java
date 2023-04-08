@@ -18,7 +18,6 @@ public class LoginController {
 
         if (client != null) {
             String code = Bank.generateRandomCode();
-            //service.sendSimpleEmail(client.getEmail(), Const.EMAIL_SUBJECT, String.format("Váš kód pro přilášení je: %s", code));
             return code;
         } else {
             return "-1";
