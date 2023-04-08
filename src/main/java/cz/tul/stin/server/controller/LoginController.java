@@ -9,17 +9,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("https://stellular-maamoul-21d188.netlify.app/")
 public class LoginController {
 
-
-
     @PostMapping("/login")
     public String login(@RequestBody String clientId) throws Exception {
-
         User client = User.getUserData(Integer.parseInt(clientId.replace("=", "")));
 
         if (client != null) {
             String code = Bank.generateRandomCode();
-            String msg = String.format("Váš kód pro přilášení je: %s", code);
-
             return code;
         } else {
             return "-1";

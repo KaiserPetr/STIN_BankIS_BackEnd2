@@ -26,8 +26,12 @@ class TransactionTest {
         String data = "[{\"msg\":\"\",\"waers\":\"CZK\",\"wrbtr\":100,\"operation\":\"+\",\"accountNumber\":123456789},{\"msg\":\"\",\"waers\":\"CZK\",\"wrbtr\":171,\"operation\":\"-\",\"accountNumber\":123456789},{\"msg\":\"AUD:CZK~1:14,44\",\"waers\":\"CZK\",\"wrbtr\":1443.6,\"operation\":\"-\",\"accountNumber\":123456789}]";
         JSONParser parser = new JSONParser();
         JSONArray ja = (JSONArray) parser.parse(data);;
-
         Json.postJsonArray(Bank.JSON_TRANSACTIONS,ja);
+
+        Bank.JSON_ACCOUNTS = "https://api.npoint.io/43d392eb5efbea83d344";
+        String dataAccounts = "[{\"waers\":\"CZK\",\"wrbtr\":419490.523,\"ownerID\":1234,\"accountNumber\":123456789},{\"waers\":\"EUR\",\"wrbtr\":1294,\"ownerID\":1234,\"accountNumber\":123789456},{\"waers\":\"CZK\",\"wrbtr\":200,\"ownerID\":4321,\"accountNumber\":753195423}]";
+        JSONArray ja2 = (JSONArray) parser.parse(dataAccounts);;
+        Json.postJsonArray(Bank.JSON_ACCOUNTS,ja2);
     }
 
     @Test
@@ -258,6 +262,7 @@ class TransactionTest {
     @AfterEach
     public void cleanup() {
         Bank.JSON_TRANSACTIONS = "https://api.npoint.io/00dd6d5cbcab26314a7b";
+        Bank.JSON_ACCOUNTS = "https://api.npoint.io/4039555b9d988523ca33";
     }
 }
 
