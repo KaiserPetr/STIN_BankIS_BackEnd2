@@ -13,7 +13,7 @@ public class LoginController {
     public String login(@RequestBody String clientId) {
 
 
-            return Bank.generateRandomCode();
+            return clientId.replace("=","");
 
     }
 }
