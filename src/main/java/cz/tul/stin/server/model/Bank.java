@@ -19,8 +19,7 @@ public class Bank {
     public static String JSON_ACCOUNTS = "https://api.npoint.io/4039555b9d988523ca33";
     public static String JSON_USERS = "https://api.npoint.io/9623327c5439cec96d2b";
     public static String JSON_CNB_DATE = "https://api.npoint.io/f12d14488063dc28d90e";
-
-
+    
     public static void downloadExchangeRates() throws Exception {
         URL url = new URL(Const.CNB_URL);
         try {
