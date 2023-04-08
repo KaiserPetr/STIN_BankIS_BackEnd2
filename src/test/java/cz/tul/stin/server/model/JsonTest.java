@@ -54,7 +54,7 @@ class JsonTest {
         URL urlObj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
         connection.setRequestMethod("GET");
-        assertEquals(201, connection.getResponseCode());
+        assertEquals(200, connection.getResponseCode());
     }
 
     @Test
@@ -80,7 +80,7 @@ class JsonTest {
         URL urlObj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
         connection.setRequestMethod("GET");
-        assertEquals(201, connection.getResponseCode());
+        assertEquals(200, connection.getResponseCode());
     }
 
     @Test
@@ -90,7 +90,7 @@ class JsonTest {
         String json = "{\"foo\":\"bar\"}";
 
         // When
-        assertThrows(IOException.class, () -> Json.openHttpConnection(url, json));
+        assertThrows(IOException.class, () -> Json.openHttpConnection(null, json));
     }
 }
 

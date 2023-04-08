@@ -8,10 +8,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Json {
-
     public static JSONObject getJsonObject(String urlString) throws Exception {
         URL url = new URL(urlString);
         JSONParser parser = new JSONParser();
@@ -26,12 +26,14 @@ public class Json {
     public static void postJsonArray(String url, JSONArray ja) throws Exception {
 
         String json = ja.toJSONString();
+
         openHttpConnection(url, json);
     }
 
     public static void postJsonObject(String url, JSONObject jo) throws Exception {
 
         String json = jo.toJSONString();
+
         openHttpConnection(url, json);
     }
 
@@ -47,5 +49,8 @@ public class Json {
         wr.writeBytes(json);
         wr.flush();
         wr.close();
+
+        int responseCode = con.getResponseCode();
+        System.out.println("Response Code: " + responseCode);
     }
 }
