@@ -12,6 +12,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Json {
+
+    private Json() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
     public static JSONObject getJsonObject(String urlString) throws Exception {
         URL url = new URL(urlString);
         JSONParser parser = new JSONParser();
@@ -51,6 +55,6 @@ public class Json {
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println("Response Code: " + responseCode);
+        System.err.println("Response Code: " + responseCode);
     }
 }
