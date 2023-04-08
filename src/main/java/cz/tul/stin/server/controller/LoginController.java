@@ -21,8 +21,7 @@ public class LoginController {
         try {
             ja = (JSONArray) parser.parse(data);
         } catch (ParseException e) {
-            return null;
-        }
+            return "-2";        }
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
