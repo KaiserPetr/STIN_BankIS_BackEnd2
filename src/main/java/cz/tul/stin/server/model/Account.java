@@ -2,11 +2,10 @@ package cz.tul.stin.server.model;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
+import static cz.tul.stin.server.model.Json.getJsonArray;
+import static cz.tul.stin.server.model.Json.postJsonArray;
 
-import java.io.*;
-import java.util.*;
 public class Account {
     private int ownerID, accountNumber;
     private float wrbtr;
@@ -20,10 +19,7 @@ public class Account {
     }
 
     public static Account getAccountFromJson (int accNum) throws Exception {
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = getJsonArray(Bank.JSON_ACCOUNTS);
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
@@ -39,10 +35,7 @@ public class Account {
     }
 
     public static Account getUsersCZKAccount (int ownerID) throws Exception{
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = getJsonArray(Bank.JSON_ACCOUNTS);
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
@@ -58,10 +51,7 @@ public class Account {
     }
 
     public static void updateAccountBalance(int accNum, float newBalance) throws Exception{
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = getJsonArray(Bank.JSON_ACCOUNTS);
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
@@ -71,16 +61,12 @@ public class Account {
                 break;
             }
         }
-        try (FileWriter file = new FileWriter(Bank.JSON_FILE)) {
-            file.write(jo.toString());
-        }
+
+        postJsonArray(Bank.JSON_ACCOUNTS,ja);
     }
 
     public static boolean checkIfAccountExists(int accountNumber) throws Exception {
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = getJsonArray(Bank.JSON_ACCOUNTS);
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
@@ -96,9 +82,7 @@ public class Account {
         if (checkIfAccountExists(accountNumber)){
             return 1;
         } else {
-            Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-            JSONObject jo = (JSONObject) obj;
-            JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+            JSONArray ja = getJsonArray(Bank.JSON_ACCOUNTS);
 
             JSONObject newAccount = new JSONObject();
             newAccount.put(Const.JKEY_ACCOUNT_NUMBER,accountNumber);
@@ -106,10 +90,9 @@ public class Account {
             newAccount.put(Const.JKEY_WAERS,waers);
             newAccount.put(Const.JKEY_OWNER_ID,ownerID);
             ja.add(newAccount);
-            try (FileWriter file = new FileWriter(Bank.JSON_FILE)) {
-                file.write(jo.toString());
-                return 0;
-            }
+
+            postJsonArray(Bank.JSON_ACCOUNTS,ja);
+            return 0;
         }
     }
 

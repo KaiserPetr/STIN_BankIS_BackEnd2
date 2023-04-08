@@ -1,62 +1,43 @@
 package cz.tul.stin.server.model;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.*;
-import java.nio.file.Files;
 import java.util.List;
 
 @SpringBootTest
 public class UserTest {
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws Exception {
         // create a test file with one account
-        File copied = new File("src/main/resources/dataTestUser.json");
-        File original = new File("src/main/resources/dataTest.json");
+       Bank.JSON_USERS = "https://api.npoint.io/196aa5f15e01f2b0d718";
 
-        try (
-                InputStream in = new BufferedInputStream(
-                        Files.newInputStream(original.toPath()));
-                OutputStream out = new BufferedOutputStream(
-                        Files.newOutputStream(copied.toPath()))) {
+        String data = "[{\"id\":1234,\"email\":\"petr.kaiser1@seznam.cz\",\"surname\":\"Kaiser\",\"firstname\":\"Petr\"},{\"id\":4321,\"email\":\"petr.kaiser1@seznam.cz\",\"surname\":\"Novák\",\"firstname\":\"Jan\"}]";
+        JSONParser parser = new JSONParser();
+        JSONArray ja = (JSONArray) parser.parse(data);;
 
-            byte[] buffer = new byte[1024];
-            int lengthRead;
-            while ((lengthRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, lengthRead);
-                out.flush();
-            }
-        }
-
-        Bank.JSON_FILE = "src/main/resources/dataTestUser.json";
+        Json.postJsonArray(Bank.JSON_USERS,ja);
     }
-    /*
+
     @Test
     public void testGetUserData() throws Exception {
         // Test valid user ID
         User user = User.getUserData(1234);
+        assert user != null;
         Assertions.assertEquals(1234, user.getId());
         Assertions.assertEquals("Petr", user.getFirstname());
         Assertions.assertEquals("Kaiser", user.getSurname());
-        Assertions.assertEquals("petr.kaiser@tul.cz", user.getEmail());
+        Assertions.assertEquals("petr.kaiser1@seznam.cz", user.getEmail());
         // Test invalid user ID
         User user2 = User.getUserData(999);
         Assertions.assertNull(user2);
     }
-    */
-    /*
-    @Test
-    public void testGetUserDataNotFound() throws Exception {
-        Bank.JSON_FILE = null;
-        User u = User.getUserData(1234);
-        Assertions.assertThrows(Exception.class, null);
-    }
-    */
 
     @Test
     public void testGetUserAccounts() throws Exception {
@@ -80,10 +61,7 @@ public class UserTest {
 
     @AfterEach
     public void cleanup() {
-        // delete the test file
-        File file = new File("src/main/resources/dataTestUser.json");
-        file.delete();
-        Bank.JSON_FILE = "src/main/resources/data.json";
+        Bank.JSON_USERS = "https://api.npoint.io/9623327c5439cec96d2b";
     }
 
 }

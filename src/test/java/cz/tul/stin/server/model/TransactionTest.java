@@ -8,8 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,31 +15,19 @@ import java.util.List;
 import static cz.tul.stin.server.model.Account.getAccountFromJson;
 import static cz.tul.stin.server.model.Account.getUsersCZKAccount;
 import static cz.tul.stin.server.model.Transaction.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TransactionTest {
 
     @BeforeEach
-    public void setup() throws IOException {
-        // create a test file with one account
-        File copied = new File("src/main/resources/dataTestTransaction.json");
-        File original = new File("src/main/resources/dataTest.json");
+    public void setup() throws Exception {
+        Bank.JSON_TRANSACTIONS = "https://api.npoint.io/88ac1f5a8b720f3ead54";
+        String data = "[{\"msg\":\"\",\"waers\":\"CZK\",\"wrbtr\":100,\"operation\":\"+\",\"accountNumber\":123456789},{\"msg\":\"\",\"waers\":\"CZK\",\"wrbtr\":171,\"operation\":\"-\",\"accountNumber\":123456789},{\"msg\":\"AUD:CZK~1:14,44\",\"waers\":\"CZK\",\"wrbtr\":1443.6,\"operation\":\"-\",\"accountNumber\":123456789}]";
+        JSONParser parser = new JSONParser();
+        JSONArray ja = (JSONArray) parser.parse(data);;
 
-        try (
-                InputStream in = new BufferedInputStream(
-                        Files.newInputStream(original.toPath()));
-                OutputStream out = new BufferedOutputStream(
-                        Files.newOutputStream(copied.toPath()))) {
-
-            byte[] buffer = new byte[1024];
-            int lengthRead;
-            while ((lengthRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, lengthRead);
-                out.flush();
-            }
-        }
-
-        Bank.JSON_FILE = "src/main/resources/dataTestTransaction.json";
+        Json.postJsonArray(Bank.JSON_TRANSACTIONS,ja);
     }
 
     @Test
@@ -202,9 +188,7 @@ class TransactionTest {
         writeTransactionToJson(t);
 
         // Check that the new transaction was added to the JSON file
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_TRANSACTIONS);
+        JSONArray ja = Json.getJsonArray(Bank.JSON_TRANSACTIONS);
         JSONObject lastTransaction = (JSONObject) ja.get(ja.size() - 1);
         assertEquals(t.getAccNum(), Integer.parseInt(lastTransaction.get(Const.JKEY_ACCOUNT_NUMBER).toString()));
         assertEquals(String.valueOf(t.getOperation()), lastTransaction.get(Const.JKEY_OPERATION));
@@ -260,6 +244,7 @@ class TransactionTest {
         List<Transaction> expectedTransactions = new ArrayList<>();
         expectedTransactions.add(new Transaction(accNumber, '+', 100.0f, "CZK", ""));
         expectedTransactions.add(new Transaction(accNumber, '-', 171.0f, "CZK", ""));
+        expectedTransactions.add(new Transaction(accNumber, '-', 1443.6f, "CZK", "AUD:CZK~1:14,44"));
         List<Transaction> actualTransactions = getTransactions(accNumber);
         for(int i = 0; i < actualTransactions.size();i++){
             assertEquals(expectedTransactions.get(i).getAccNum(), actualTransactions.get(i).getAccNum());
@@ -272,11 +257,7 @@ class TransactionTest {
 
     @AfterEach
     public void cleanup() {
-        // delete the test file
-        File file = new File("src/main/resources/dataTestTransaction.json");
-        file.delete();
-        Bank.JSON_FILE = "src/main/resources/data.json";
+        Bank.JSON_TRANSACTIONS = "https://api.npoint.io/00dd6d5cbcab26314a7b";
     }
-
 }
 

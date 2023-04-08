@@ -1,18 +1,13 @@
 package cz.tul.stin.server.model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import static cz.tul.stin.server.model.Json.getJsonArray;
 
 public class User {
     private int id;
@@ -41,15 +36,8 @@ public class User {
         return surname;
     }
 
-    public static User getUserData(int id) throws Exception {
-
-        ObjectMapper mapper = new ObjectMapper();
-        File f = mapper.readValue(new File(Bank.JSON_FILE), File.class);
-
-        Object obj = new JSONParser().parse(new FileReader(f));
-        JSONObject jo = (JSONObject) obj;
-
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_USERS);
+   public static User getUserData(int id) throws Exception {
+       JSONArray ja = getJsonArray(Bank.JSON_USERS);
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
@@ -68,10 +56,7 @@ public class User {
 
     public static List<Account> getUserAccounts(int userId) throws Exception {
         List<Account> accounts = new ArrayList<>();
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-
-        JSONObject jo = (JSONObject) obj;
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = getJsonArray(Bank.JSON_ACCOUNTS);
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
             int jOwnerId = Integer.parseInt(joi.get(Const.JKEY_OWNER_ID).toString());
@@ -82,7 +67,6 @@ public class User {
 
                 accounts.add(new Account(userId,accNumber,wrbtr,waers));
             }
-
         }
 
         return accounts;

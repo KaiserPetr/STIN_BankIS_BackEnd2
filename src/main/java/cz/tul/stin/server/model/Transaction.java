@@ -3,17 +3,16 @@ package cz.tul.stin.server.model;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static cz.tul.stin.server.model.Account.*;
 import static cz.tul.stin.server.model.Account.getUsersCZKAccount;
+import static cz.tul.stin.server.model.Account.updateAccountBalance;
 import static cz.tul.stin.server.model.Bank.getExchangeRate;
+import static cz.tul.stin.server.model.Json.getJsonArray;
+import static cz.tul.stin.server.model.Json.postJsonArray;
 import static cz.tul.stin.server.model.User.getUserAccounts;
 
 public class Transaction {
@@ -136,9 +135,7 @@ public class Transaction {
     }
 
     public static void writeTransactionToJson(Transaction t) throws Exception{
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_TRANSACTIONS);
+        JSONArray ja = getJsonArray(Bank.JSON_TRANSACTIONS);
 
         JSONObject newTransaction = new JSONObject();
         newTransaction.put(Const.JKEY_ACCOUNT_NUMBER,t.getAccNum());
@@ -147,9 +144,8 @@ public class Transaction {
         newTransaction.put(Const.JKEY_WAERS,t.getWaers());
         newTransaction.put(Const.JKEY_MESSAGE,t.getMessage());
         ja.add(newTransaction);
-        try (FileWriter file = new FileWriter(Bank.JSON_FILE)) {
-            file.write(jo.toString());
-        }
+
+        postJsonArray(Bank.JSON_TRANSACTIONS,ja);
     }
 
     public static Transaction generateRandomTransaction(int accNum){
@@ -164,9 +160,7 @@ public class Transaction {
 
     public static List<Transaction> getTransactions(int accNumber) throws Exception{
         List<Transaction> transactions = new ArrayList<>();
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_TRANSACTIONS);
+        JSONArray ja = getJsonArray(Bank.JSON_TRANSACTIONS);
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
             int jAccNumber = Integer.parseInt(joi.get(Const.JKEY_ACCOUNT_NUMBER).toString());

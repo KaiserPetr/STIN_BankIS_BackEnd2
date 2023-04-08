@@ -1,54 +1,26 @@
 package cz.tul.stin.server.model;
 
 import cz.tul.stin.server.config.Const;
-import org.json.simple.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
-import java.nio.file.Files;
-
 public class AccountTest {
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setup() throws Exception {
         // create a test file with one account
-        File copied = new File("src/main/resources/dataTestAccount.json");
-        File original = new File("src/main/resources/dataTest.json");
+        Bank.JSON_ACCOUNTS = "https://api.npoint.io/e8135a468b3f9070545d";
+        // post test data
+        String data = "[{\"waers\":\"CZK\",\"wrbtr\":1000,\"ownerID\":456,\"accountNumber\":123}]";
+        JSONParser parser = new JSONParser();
+        JSONArray ja = (JSONArray) parser.parse(data);;
 
-        try (
-                InputStream in = new BufferedInputStream(
-                        Files.newInputStream(original.toPath()));
-                OutputStream out = new BufferedOutputStream(
-                        Files.newOutputStream(copied.toPath()))) {
-
-            byte[] buffer = new byte[1024];
-            int lengthRead;
-            while ((lengthRead = in.read(buffer)) > 0) {
-                out.write(buffer, 0, lengthRead);
-                out.flush();
-            }
-        }
-
-        JSONObject jo = new JSONObject();
-        JSONArray ja = new JSONArray();
-        Bank.JSON_FILE = "src/main/resources/dataTestAccount.json";
-
-        JSONObject account = new JSONObject();
-        account.put(Const.JKEY_ACCOUNT_NUMBER, 123);
-        account.put(Const.JKEY_WRBTR, 1000);
-        account.put(Const.JKEY_WAERS, "CZK");
-        account.put(Const.JKEY_OWNER_ID, 456);
-
-        ja.add(account);
-        jo.put(Const.JKEY_BANK_ACCOUNTS, ja);
-
-        try (FileWriter file = new FileWriter(Bank.JSON_FILE)) {
-            file.write(jo.toString());
-        }
+        Json.postJsonArray(Bank.JSON_ACCOUNTS,ja);
     }
 
     @Test
@@ -56,9 +28,7 @@ public class AccountTest {
         int result = Account.createNewAccount(789, 456, "CZK");
         Assertions.assertEquals(0, result);
         // check that the account was added to the file
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = Json.getJsonArray(Bank.JSON_ACCOUNTS);
         JSONObject newAccount = (JSONObject) ja.get(1);
         Assertions.assertEquals(456, Integer.parseInt(newAccount.get(Const.JKEY_ACCOUNT_NUMBER).toString()));
         Assertions.assertEquals(0, Integer.parseInt(newAccount.get(Const.JKEY_WRBTR).toString()));
@@ -85,9 +55,7 @@ public class AccountTest {
     public void testUpdateAccountBalance() throws Exception {
         Account.updateAccountBalance(123, 2000);
         // check that the balance was updated in the file
-        Object obj = new JSONParser().parse(new FileReader(Bank.JSON_FILE));
-        JSONObject jo = (JSONObject) obj;
-        JSONArray ja = (JSONArray) jo.get(Const.JKEY_BANK_ACCOUNTS);
+        JSONArray ja = Json.getJsonArray(Bank.JSON_ACCOUNTS);
         JSONObject updatedAccount = (JSONObject) ja.get(0);
         Assertions.assertEquals(2000.0, updatedAccount.get(Const.JKEY_WRBTR));
     }
@@ -115,9 +83,9 @@ public class AccountTest {
     @AfterEach
     public void cleanup() {
         // delete the test file
-        File file = new File("src/main/resources/dataTestAccount.json");
-        file.delete();
-        Bank.JSON_FILE = "src/main/resources/data.json";
+        Bank.JSON_ACCOUNTS = "https://api.npoint.io/4039555b9d988523ca33";
     }
+
+
 }
 
