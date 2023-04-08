@@ -16,7 +16,7 @@ public class Bank {
 
     public static String JSON_TRANSACTIONS = "https://api.npoint.io/00dd6d5cbcab26314a7b";
     public static String JSON_CNB = "https://api.npoint.io/6997254c8bfd5df5736a";
-    public static String JSON_ACCOUNTS = "http://stuwrk.nti.tul.cz/~petr.kaiser/stin/data.json";
+    public static String JSON_ACCOUNTS = "https://api.npoint.io/4039555b9d988523ca33";
     public static String JSON_USERS = "https://api.npoint.io/9623327c5439cec96d2b";
     public static String JSON_CNB_DATE = "https://api.npoint.io/f12d14488063dc28d90e";
 
