@@ -3,8 +3,6 @@ package cz.tul.stin.server.model;
 import cz.tul.stin.server.config.Const;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +36,8 @@ public class User {
         return surname;
     }
 
-   public static User getUserData(int id) {
-       String data = "[{\"id\":1234,\"email\":\"petr.kaiser1@seznam.cz\",\"surname\":\"Kaiser\",\"firstname\":\"Petr\"},{\"id\":4321,\"email\":\"petr.kaiser1@seznam.cz\",\"surname\":\"Novák\",\"firstname\":\"Jan\"}]";
-       JSONParser parser = new JSONParser();
-       JSONArray ja = null;
-       try {
-           ja = (JSONArray) parser.parse(data);
-       } catch (ParseException e) {
-           return null;
-       }
+    public static User getUserData(int id) throws Exception {
+        JSONArray ja = getJsonArray(Bank.JSON_USERS);
 
         for (Object o : ja) {
             JSONObject joi = (JSONObject) o;
